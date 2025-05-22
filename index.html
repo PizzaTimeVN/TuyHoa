@@ -196,10 +196,10 @@
       });
     });
 
-    function sendTelegramMessage(message) {
+   function sendTelegramMessage(message) {
   const botToken = '7998294485:AAFTYXovQjyx0uKFJsgM4zQfJ8LFRxzqsfg';
   const chatId = '-1002687702091';
-  const threadId = 49; // ID của topic mới
+  const threadId = 49; // ID topic "Dat Hang"
 
   fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
     method: 'POST',
@@ -208,7 +208,7 @@
     },
     body: JSON.stringify({
       chat_id: chatId,
-      message_thread_id: threadId, // 👈 Thêm dòng này
+      message_thread_id: threadId,  // 👈 Bắt buộc để gửi đúng topic
       text: message
     })
   })
