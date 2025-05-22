@@ -114,7 +114,7 @@
         const div = document.createElement('div');
         div.className = "border rounded shadow-sm bg-white hover:shadow-md";
         div.innerHTML = `
-          <img src="${item.image || 'https://via.placeholder.com/150'}" alt="${item.name}" class="w-full h-32 object-cover rounded-t">
+          <img src="${item.image}" alt="${item.name}" class="w-full h-32 object-cover rounded-t" onerror="this.src='https://via.placeholder.com/150'">
             <div class="p-3">
             <h3 class="font-bold text-lg">${item.name}</h3>
             <p class="text-green-600 font-medium">${formatPrice(item.price)}</p>
@@ -255,11 +255,31 @@
       alert("Vui lòng nhập đầy đủ thông tin khách hàng!");
       return;
     }
-
     if (cart.length === 0) {
-      alert("Vui lòng thêm sản phẩm vào giỏ hàng!");
+      alert("Bạn chưa chọn món nào.");
       return;
     }
+    const message = formatOrderMessage(cart, name, phone, address, note);
+    sendTelegramMessage(message);
+
+    // Hiển thị phần cảm ơn
+    document.getElementById('order-summary').classList.remove('hidden');
+
+    const detailDiv = document.getElementById('order-detail');
+    detailDiv.innerHTML = `
+      <p><strong>Khách:</strong> ${name}</p>
+      <p><strong>SĐT:</strong> ${phone}</p>
+      <p><strong>Địa chỉ:</strong> ${address}</p>
+      ${note ? `<p><strong>Ghi chú:</strong> ${note}</p>` : ''}
+      <p><strong>Số món:</strong> ${cart.length}</p>
+      <p><strong>Tổng tiền:</strong> ${document.getElementById('cart-total').textContent}</p>
+    `;
+
+    // Reset giỏ hàng
+    cart = [];
+    renderCart();
+  });
+
 
     // Soạn nội dung tin nhắn
     let message = `🛒 ĐƠN HÀNG MỚI\n👤 Khách: ${name}\n📞 SĐT: ${phone}\n🏠 Địa chỉ: ${address}\n📝 Ghi chú: ${note || "Không có"}\n\n📦 Món đặt:\n`;
